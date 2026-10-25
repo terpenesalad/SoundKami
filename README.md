@@ -1,5 +1,7 @@
 # SoundKami
 
+**[Download the latest release](https://github.com/terpenesalad/SoundKami/releases/latest)**
+
 A clean, customisable Discord soundboard for Windows. Click a button or press a hotkey and everyone in your voice channel hears the sound — mixed with your mic, plus any music you choose to share.
 
 ## Features
@@ -55,7 +57,7 @@ npm run package        # → dist/SoundKami-win32-x64 and a portable zip
 npx electron-builder --win nsis --x64 --prepackaged dist/SoundKami-win32-x64   # → installer
 ```
 
-Pushing a tag like `v1.0.0` to GitHub runs `.github/workflows/release.yml`, which builds the installer and portable zip on Windows and attaches them to a GitHub release.
+**Releasing:** bump `version` in `package.json` and push to `main`. `.github/workflows/release.yml` builds the installer and portable zip on Windows and, if that version hasn't been released yet, creates the `v<version>` tag and a GitHub release with both files attached.
 
 ## Project layout
 
