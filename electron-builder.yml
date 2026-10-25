@@ -1,0 +1,20 @@
+appId: com.soundkami.app
+productName: SoundKami
+directories:
+  output: dist/installer
+win:
+  target: [nsis]
+  icon: assets/icon.ico
+  signAndEditExecutable: false
+nsis:
+  oneClick: false
+  perMachine: false
+  allowToChangeInstallationDirectory: true
+  createDesktopShortcut: true
+  createStartMenuShortcut: true
+  shortcutName: SoundKami
+  installerIcon: assets/icon.ico
+  uninstallerIcon: assets/icon.ico
+  artifactName: SoundKami-Setup-${version}.exe
+  deleteAppDataOnUninstall: false
+publish: null

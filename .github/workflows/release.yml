@@ -1,0 +1,53 @@
+name: Build & release
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      # Build the app-audio capture helper with the same MinGW toolchain used locally.
+      - uses: msys2/setup-msys2@v2
+        with:
+          msystem: UCRT64
+          install: mingw-w64-ucrt-x86_64-gcc
+      - name: Build sk-capture.exe
+        shell: msys2 {0}
+        run: g++ -O2 -std=c++17 -municode -static -s -o native/sk-capture.exe native/sk-capture.cpp -lole32 -lversion -luuid
+
+      - name: Package portable build
+        run: node scripts/package.js
+
+      - name: Build installer
+        run: npx electron-builder --win nsis --x64 --prepackaged dist/SoundKami-win32-x64 --publish never
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: SoundKami-windows
+          path: |
+            dist/installer/*.exe
+            dist/*.zip
+
+      - name: Publish GitHub release
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            dist/installer/*.exe
+            dist/*.zip
+          generate_release_notes: true
